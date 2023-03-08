@@ -2,25 +2,32 @@
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { AppComponent } from './app.component';
+import { tapResponse } from '@ngrx/component-store';
+import { Subject, tap } from 'rxjs';
+import { TestScheduler } from 'rxjs/testing';
+import { AppComponent, myFunction1 } from './app.component';
+import { MockSocketClient, SocketClient } from './socket-client';
 
 describe('AppComponent', () => {
-  let component: AppComponent;
-  let fixture: ComponentFixture<AppComponent>;
+  let testScheduler: TestScheduler;
+  let componentUnderTest: AppComponent;
+  let mockSocketClient: MockSocketClient;
+  let packetSubject: Subject<string>;
 
   beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [ AppComponent ]
-    })
-    .compileComponents();
+    packetSubject = new Subject();
+    mockSocketClient = new MockSocketClient(packetSubject);
+    componentUnderTest = new AppComponent(mockSocketClient);
 
-    fixture = TestBed.createComponent(AppComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    testScheduler = new TestScheduler((actual, expected) => {
+      return expect(actual).toEqual(expected);
+    });
+    
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    const vm = componentUnderTest.vm$;
+
+
   });
 });

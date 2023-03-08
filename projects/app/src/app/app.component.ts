@@ -3,6 +3,17 @@
 
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { delay, map, Observable, of } from 'rxjs';
+import { SocketClient } from './socket-client';
+
+export function myFunction1(x: string): Observable<string> {
+  return of(x).pipe(
+    map((x) => x.split(' ')),
+    map((x) => x.reverse()),
+    map((x) => x.join(' ')),
+    delay(10)
+  );
+}
 
 @Component({
   selector: 'app-root',
@@ -14,5 +25,10 @@ import { Component } from '@angular/core';
   ]
 })
 export class AppComponent {
+  constructor(
+    private readonly _socketClient: SocketClient
+  ) { }
   
+  public vm$ = this._socketClient.packet$;
+
 }
